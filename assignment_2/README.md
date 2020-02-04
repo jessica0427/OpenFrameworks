@@ -4,8 +4,9 @@
 ## C++ ##
 
 
-## Desciription ##
+## Description ##
 
+Here is a screenshot of Modules 4-6 and a video of the program running.
 
 
 ## Screenshots ##
