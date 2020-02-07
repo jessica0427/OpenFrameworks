@@ -6,7 +6,7 @@
 
 ## Description ##
 
-Below is the two screenshots of Modules 4-6 and a screenshot of the video of the program running.
+This page contains two screenshots of Modules 4-6 and a screenshot of the video of the program running.
 
 
 ## Screenshots ##
