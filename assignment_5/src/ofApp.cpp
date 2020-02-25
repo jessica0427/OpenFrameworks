@@ -1,8 +1,7 @@
 #include "ofApp.h"
 
 //face variables
-ofCircle face;
-ofCircle faceOutline;
+
 int faceWidth = 180;
 int faceHeight = 180;
 
@@ -117,19 +116,19 @@ void ofApp::drawPolygonsUp(){
 void ofApp::drawFace(int x, int y) {
     //outline of face
    ofSetColor(black);
-   faceOutline.width = faceWidth + (2 * strokeThickness);
-   faceOutline.height = faceHeight + (2 * strokeThickness);
-   faceOutline.x =  x - (faceOutline.width/2);
-   faceOutline.y = y - (faceOutline.height/2);
-   ofDrawCircle(faceOutline, 60);
+//    faceOutline.width = faceWidth + (2 * strokeThickness);
+//    faceOutline.height = faceHeight + (2 * strokeThickness);
+//    faceOutline.x =  x - (faceOutline.width/2);
+//    faceOutline.y = y - (faceOutline.height/2);
+   ofDrawCircle( x- (faceWidth + (2 * strokeThickness)/2) ,y (faceHeight + (2 * strokeThickness)/2), 60);
    
    //face
    ofSetColor(white);
-   face.width = faceWidth;
-   face.height = faceHeight;
-   face.x = x - faceWidth/2;
-   face.y = y - faceHeight/2;
-   ofDrawRectRounded(face, 80);
+//    face.width = faceWidth;
+//    face.height = faceHeight;
+//    face.x = x - faceWidth/2;
+//    face.y = y - faceHeight/2;
+   ofDrawRectRounded(x - faceWidth/2, y - faceHeight/2, faceWidth, faceHeight);
    
    //left eye
    ofSetColor(black);

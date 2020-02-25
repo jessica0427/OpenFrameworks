@@ -3,10 +3,6 @@
 #include "ofMain.h"
 
 class ofApp : public ofBaseApp{
-    
-    ofSoundPlayer soundPlayer;
-
-class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
