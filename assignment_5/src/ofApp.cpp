@@ -7,7 +7,7 @@ int faceHeight = 180;
 
 int strokeThickness = 12;
 
-int eyeDistanceX = 45;
+int eyeDistanceX = 40;
 int eyeDistanceY = 2;
 int eyeSize = 12;
 
@@ -22,24 +22,38 @@ int mouthWidth = 30;
 int slideNumber = 0;
 float currentTime = 0;
 
+//sound
+of SoundPlayer mySound;
+
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-    game_music.load ("game_music.wav");
-    game_music.setVolume (05.);
-    
     ofSetFrameRate(60);
     
     ofSetCircleResolution(100);
     ofEnableSmoothing();
 
-    
+    mySound.load("game_music.wav");
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+      if ((ofGetFrameNum() % 120) == 0) {
+       if (!mySound.isPlaying()) {
+            mySound.play();
+       }
+       if (slideNumber > 2){
+           slideNumber = 0;
+       } else {
+           slideNumber++;
+           //reset timer
+           currentTime = ofGetFrameNum();
+           ofLog(OF_LOG_NOTICE, ofToString(currentTime));
+       }
+   }
+}
+
 }
 
 //--------------------------------------------------------------
@@ -188,7 +202,6 @@ void ofApp::drawSadParts(int x, int y) {
     ofRotateDeg(0.1 * (ofGetFrameNum() - currentTime) );
     ofDrawRectangle(eyebrowDistanceX/2, -eyebrowDistanceY, eyebrowWidth, eyebrowHeight);
      ofPopMatrix();
-    
 
     //angry mouth
     ofDrawBezier(x - 10, y + 20 + 0.03 * (ofGetFrameNum() - currentTime),
@@ -252,6 +265,11 @@ void ofApp::drawSurprisedParts(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+
+if(key == 'p'){
+        mySound.play();
+        ofLog(OF_LOG_NOTICE, "p pressed");
+    }
 
 }
 
