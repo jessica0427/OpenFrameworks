@@ -3,12 +3,13 @@
 #include "ofMain.h"
 
 class ofApp : public ofBaseApp{
+	 
 
 	public:
 		void setup();
 		void update();
 		void draw();
-    
+
         void drawFace(int x, int y);
         void drawHappyParts(int x, int y);
         void drawSadParts(int x, int y);

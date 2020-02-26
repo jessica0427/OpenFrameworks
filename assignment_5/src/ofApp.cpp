@@ -2,6 +2,8 @@
 
 //face variables
 
+ofRectangle face;
+ofRectangle faceOutline;
 int faceWidth = 180;
 int faceHeight = 180;
 
@@ -16,30 +18,41 @@ int eyebrowDistanceY = 32;
 int eyebrowWidth = 30;
 int eyebrowHeight = 12;
 
+int noseWidth = 20;
+int noseHeight = 15;
+
 int mouthWidth = 30;
 
 //controls
 int slideNumber = 0;
 float currentTime = 0;
 
-//sound
-of SoundPlayer mySound;
+//colors
+ofColor black(0,0,0);
+ofColor blue(135, 214, 235);
+ofColor white(255,255,255);
+
+//controls
+int slideNumber = 0;
+float currentTime = 0;
+
+//Sound
+ofSoundPlayer mySound;
 
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
     ofSetFrameRate(60);
     
     ofSetCircleResolution(100);
     ofEnableSmoothing();
-
+    
     mySound.load("game_music.wav");
+    
 }
-
 //--------------------------------------------------------------
 void ofApp::update(){
-      if ((ofGetFrameNum() % 120) == 0) {
+   if ((ofGetFrameNum() % 120) == 0) {
        if (!mySound.isPlaying()) {
             mySound.play();
        }
@@ -53,9 +66,6 @@ void ofApp::update(){
        }
    }
 }
-
-}
-
 //--------------------------------------------------------------
 void ofApp::draw(){
     
@@ -75,81 +85,51 @@ void ofApp::draw(){
    }
     if (slideNumber == 3) {
         drawHappyParts(ofGetWidth()/2, ofGetHeight()/2);
-    }
-    
-    if ((ofGetFrameNum() % 120) == 0) {
-        if (slideNumber > 2){
-            slideNumber = 0;
-        } else {
-            slideNumber++;
-            //reset timer
-            currentTime = ofGetFrameNum();
-            ofLog(OF_LOG_NOTICE, ofToString(currentTime));
-        }
-    }
-    
-}
-
-void ofApp::drawPolygons(){
-    path.moveTo(0,0-170,0);
-    path.lineTo(-110,-80,0);
-    path.lineTo(-37,-80,60);
-    path.lineTo(+37,-80,60);
-    path.lineTo(+110,-80,0);
-    path.lineTo(0,-170,0);
-    path.lineTo(-37,-80,60);
-    path.lineTo(+37,-80,60);
-    
-    path.lineTo(0,-170,0);
-    path.lineTo(-110,-80,0);
-    path.lineTo(-37,-80,-60);
-    path.lineTo(+37,-80,-60);
-    path.lineTo(+110,-80,0);
-    path.lineTo(0,-170,0);
-    path.lineTo(-37,-80,-60);
-    path.lineTo(+37,-80,-60);
-    path.lineTo(0,-170,0);
-    
-    
-    path.close();
-    path.setStrokeColor(black);
-    path.setStrokeWidth(4);
-    path.setFilled(false);
-    
-    path.draw();
-}
-
-void ofApp::drawPolygonsUp(){
-    ofPushMatrix();
-    ofTranslate(windowWidth*0.5, windowHeight*0.5,0);
-    ofRotateYDeg(rAngle);
-    drawPolygons();
-    ofPopMatrix();
+    }   
 }
 
 void ofApp::drawFace(int x, int y) {
     //outline of face
-   ofSetColor(black);
+
+//    ofSetColor(black);
 //    faceOutline.width = faceWidth + (2 * strokeThickness);
 //    faceOutline.height = faceHeight + (2 * strokeThickness);
 //    faceOutline.x =  x - (faceOutline.width/2);
 //    faceOutline.y = y - (faceOutline.height/2);
-   ofDrawCircle( x- (faceWidth + (2 * strokeThickness)/2) ,y (faceHeight + (2 * strokeThickness)/2), 60);
+//    ofDrawRectRounded(faceOutline, 80);
    
-   //face
-   ofSetColor(white);
-//    face.width = faceWidth;
-//    face.height = faceHeight;
-//    face.x = x - faceWidth/2;
-//    face.y = y - faceHeight/2;
-   ofDrawRectRounded(x - faceWidth/2, y - faceHeight/2, faceWidth, faceHeight);
+    //face
+     ofSetColor(white);
+     face.width = faceWidth;
+     face.height = faceHeight;
+     face.x = x - faceWidth/2;
+     face.y = y - faceHeight/2;
+     ofDrawRectRounded(face, 80);
    
+
    //left eye
    ofSetColor(black);
    ofDrawCircle(x - eyeDistanceX , y - eyeDistanceY , eyeSize);
 
    //right eye
    ofDrawCircle(x + eyeDistanceX , y - eyeDistanceY , eyeSize);
+
+   //polygon nose
+
+ofPolyline nose;
+    nose.addVertex(ofVec3f(x, y - noseHeight/2,0));
+    nose.addVertex(ofVec3f(x - noseWidth/2, y + noseHeight/2, 0));
+    nose.addVertex(ofVec3f(x + noseWidth/2, y + noseHeight/2, 0));
+    nose.close();
+    nose.draw();
+
+//convert nose polyline to shape
+
+     ofBeginShape();
+         for( int i = 0; i < nose.getVertices().size(); i++) {
+             ofVertex(nose.getVertices().at(i).x, nose.getVertices().at(i).y);
+         }
+     ofEndShape();
    
    
 }
@@ -234,6 +214,7 @@ void ofApp::drawHappyParts(int x, int y) {
                  );
 }
 void ofApp::drawSurprisedParts(int x, int y) {
+
     
     int leftEBX = x - eyebrowDistanceX/2;
     int leftEBY = y ;
@@ -260,8 +241,6 @@ void ofApp::drawSurprisedParts(int x, int y) {
                  x + 10, y + 25
                  );
 }
-
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
