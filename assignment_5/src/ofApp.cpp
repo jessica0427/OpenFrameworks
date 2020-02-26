@@ -24,8 +24,8 @@ int noseHeight = 15;
 int mouthWidth = 30;
 
 //controls
-int slideNumber = 0;
-float currentTime = 0;
+// int slideNumber = 0;
+// float currentTime = 0;
 
 //colors
 ofColor black(0,0,0);
@@ -115,8 +115,7 @@ void ofApp::drawFace(int x, int y) {
    ofDrawCircle(x + eyeDistanceX , y - eyeDistanceY , eyeSize);
 
    //polygon nose
-
-ofPolyline nose;
+    ofPolyline nose;
     nose.addVertex(ofVec3f(x, y - noseHeight/2,0));
     nose.addVertex(ofVec3f(x - noseWidth/2, y + noseHeight/2, 0));
     nose.addVertex(ofVec3f(x + noseWidth/2, y + noseHeight/2, 0));
