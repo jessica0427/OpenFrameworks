@@ -9,10 +9,6 @@ I added game music and a polygon shape to this animation.
 
 ## Link to video ##
 
+Click on the link below to see the video with sound.
+
 https://vimeo.com/394083471
-
-var embed = require("embed-video")
-
-var vimeoUrl = "https://vimeo.com/394083471"
-
-[![Alt text](https://vimeo.com/394083471.jpg)](https://vimeo.com/394083471)
