@@ -57,7 +57,7 @@ void ofApp::setup(){
     suncharacterImage.load("images/suncharacter.png");
     sunImage.load("images/sun.png");
     
-    radioSignal.load("sound/Radio Signal Sound Effect.mp3");
+    radioSignal.load("rainandthunder.wav");
 }
 
 //--------------------------------------------------------------
