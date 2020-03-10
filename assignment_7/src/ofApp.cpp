@@ -1,253 +1,233 @@
 #include "ofApp.h"
 
-//face variables
-
-ofRectangle face;
-ofRectangle faceOutline;
-int faceWidth = 180;
-int faceHeight = 180;
-
-int strokeThickness = 12;
-
+//eyes
 int eyeDistanceX = 40;
 int eyeDistanceY = 2;
 int eyeSize = 12;
 
-int eyebrowDistanceX = 33;
-int eyebrowDistanceY = 32;
-int eyebrowWidth = 30;
-int eyebrowHeight = 12;
+//Speed
+float s=0.05f;
 
-int noseWidth = 20;
-int noseHeight = 15;
+//point1,2
+ofVec2f g1,f1,m1,m2,m3,m4;
+ofVec2f eye,eyebrow;
+ofVec2f eb1,eb2,eb3,eb4;
 
-int mouthWidth = 30;
-
-//controls
-// int slideNumber = 0;
-// float currentTime = 0;
-
-//colors
-ofColor black(0,0,0);
-ofColor blue(135, 214, 235);
-ofColor white(255,255,255);
-
-//controls
-int slideNumber = 0;
-float currentTime = 0;
-
-//Sound
-ofSoundPlayer mySound;
-
+//emotion
+int x;
+float fradius=100;
+int sd;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetFrameRate(60);
+    ofBackground(51,204,204);
+    ofSetFrameRate(50);
+    ofSetWindowTitle("Week6Assignment");
+    // line
+    ofSetColor(255);
+    ofSetLineWidth(5);
+    ofSetCircleResolution(50);
+    ofSetCurveResolution(50);
     
-    ofSetCircleResolution(100);
-    ofEnableSmoothing();
+    //Center
+    ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
     
-    mySound.load("game_music.wav");
     
+    //setup point
+    g1.set(-30,-30);
+    eye.set(50,-20);
+    eyebrow.set(40,-90);
+    
+    m1.set(-70,120);//70,20
+    m2.set(-50,120);//50,85
+    //sad x:-60,-50,40,50 y:30,25,10,20
+    m3.set(50,85);
+    m4.set(70,20);
+    
+    //eyebrow
+    eb1.set(40,-90);
+    eb2.set(35,-95);
+    eb3.set(25,-95);
+    eb4.set(20,-90);
+    f1.set(80,-40);
+//----------------------------------------------------------
+//Gui
+    ofSetVerticalSync(true);
+    
+    //Add listenr
+    //emotion.addListener(<#ListenerClass *listener#>, <#ListenerMethod method#>)
+    emotion.addListener(this, &ofApp::emotionchanged);
+    face.addListener(this, &ofApp::scaleFace);
+    
+    //Gui SETUP
+    gui.setup();
+    gui.add(face.setup("Scale the Face",100,80,200));
+    gui.add(volume.setup("Volume",0.5f,0.0f,1.0f));
+    gui.add(rotate.setup("Rotate one eyebrow",10.0f,-10.0f,30.0f));
+    //ofxVec2Slider to change the x,y
+    //x:x+35  0->40 -20->20
+    //y:y=y
+    gui.add(center.setup("Move eyes",{0, -5}, {-20, -20}, {30, 10}));
+    
+    //Button to change emotion
+    gui.add(emotion.setup("Change Emotion"));
+    //slider to change the color of background
+    gui.add(color.setup("background color",ofColor(51,204,204),ofColor(0,0),ofColor(255,255)));
+    
+    //sound
+    sound.load("sound.wav");
+        
+  
 }
+
 //--------------------------------------------------------------
 void ofApp::update(){
-   if ((ofGetFrameNum() % 120) == 0) {
-       if (!mySound.isPlaying()) {
-            mySound.play();
-       }
-       if (slideNumber > 2){
-           slideNumber = 0;
-       } else {
-           slideNumber++;
-           //reset timer
-           currentTime = ofGetFrameNum();
-           ofLog(OF_LOG_NOTICE, ofToString(currentTime));
-       }
-   }
+    
 }
+
+
+
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofBackground(135, 214, 235);
-    drawFace(ofGetWidth()/2, ofGetHeight()/2);
     
-    if (slideNumber == 0) {
-        drawSadParts(ofGetWidth()/2, ofGetHeight()/2);
-      
-    }
-    if (slideNumber == 1) {
-        drawSurprisedParts(ofGetWidth()/2, ofGetHeight()/2);
-   }
-    if (slideNumber == 2) {
-        drawAngryParts(ofGetWidth()/2, ofGetHeight()/2);
-        
-   }
-    if (slideNumber == 3) {
-        drawHappyParts(ofGetWidth()/2, ofGetHeight()/2);
-    }   
-}
+    
+    ofBackground(color);
+    gui.draw();
+    ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
+    //ofTranslate(center->x, center->y);
 
-void ofApp::drawFace(int x, int y) {
-    //outline of face
+    //Face
+    ofFill();
+    ofSetColor(255);
+    ofDrawCircle(0, 0, fradius);
+    ofSetColor(0, 0, 0 );
+    ofDrawCircle(0, 0, fradius-5);
+    ofSetColor(51,204,204);
+    ofNoFill();
 
-//    ofSetColor(black);
-//    faceOutline.width = faceWidth + (2 * strokeThickness);
-//    faceOutline.height = faceHeight + (2 * strokeThickness);
-//    faceOutline.x =  x - (faceOutline.width/2);
-//    faceOutline.y = y - (faceOutline.height/2);
-//    ofDrawRectRounded(faceOutline, 80);
-   
-    //face
-     ofSetColor(white);
-     face.width = faceWidth;
-     face.height = faceHeight;
-     face.x = x - faceWidth/2;
-     face.y = y - faceHeight/2;
-     ofDrawRectRounded(face, 80);
-   
+    //line color
+    ofSetColor(255);
 
-   //left eye
+    //left eye
    ofSetColor(black);
    ofDrawCircle(x - eyeDistanceX , y - eyeDistanceY , eyeSize);
 
    //right eye
    ofDrawCircle(x + eyeDistanceX , y - eyeDistanceY , eyeSize);
 
-   //polygon nose
-    ofPolyline nose;
-    nose.addVertex(ofVec3f(x, y - noseHeight/2,0));
-    nose.addVertex(ofVec3f(x - noseWidth/2, y + noseHeight/2, 0));
-    nose.addVertex(ofVec3f(x + noseWidth/2, y + noseHeight/2, 0));
-    nose.close();
-    nose.draw();
+    //volume
+    sound.setVolume(volume);
+        switch (x) {
+        //happiness
+        //--------------------------------------------------------------
+        case 0:
+                //Move eyebrow
+                setXEyebrows(40, 35, 25, 20);
+                setYEyebrows(-50, -55, -55, -50);
+                ofPushMatrix();
+                ofRotateZ(rotate);
+                eyebrows2();
+                ofPopMatrix();
+                
+                
+                
+                
+                eyebrows1();
+                
+                
+                //mouth ofDrawBezier(-70, 20, -50, 85, 50, 85, 70, 20);
+                m1.x+=s*(-70-m1.x);
+                m2.x+=s*(-70-m2.x);
+                m1.y+=s*(20-m1.y);
+                m2.y+=s*(85-m2.y);
+                
+                eyes();
+                
+                mouth();
+                playSound(0);
+            
+            break;
+        //sad
+        case 1:
+                //mouth
+                //sad x:-60,-50,40,50 y:30,25,10,20
+                setXMouth(-60, -50, 40, 50);
+                setYMouth(30,25, 10, 20);
+                
+                //eyebrow
+                //x:80,75,50,20
+                //y:-10,-13,-15,-40
+                setXEyebrows(80, 75, 50, 20);
+                setYEyebrows(-10, -13, -15, -40);
+                
+                eyes();
+                eyebrows1();
+                eyebrows2();
+                mouth2();
+                playSound(1);
+            break;
+        //surprise
+        case 2:
+                //eyes
+                //seteyes(45, -10);
+                f1.x+=s*(45-f1.x);
+                f1.y+=s*(-10-f1.y);
+               
+                ofFill();
+                ofDrawCircle(f1.x, f1.y, 30);
+                ofDrawCircle(f1.x*-1, f1.y, 30);
+                ofSetColor(0, 0, 0);
+                ofDrawCircle(f1.x, f1.y, 25);
+                ofDrawCircle(f1.x*-1, f1.y, 25);
+                ofNoFill();
+                ofSetColor(255);
+                    
+                //mouth
+                setXMouth(-30, -10, 10 , 20);
+                setYMouth(55, 50, 45, 40);
+                
+                eyes();
+                mouth2();
+                playSound(2);
+            break;
+       //anger
+        case 3:
+                //eye
+                //seteyes(35, 0);
+                eyes();
+                //eyebrow
+                setXEyebrows(80, 60, 40, 20);
+                setYEyebrows(-40, -35, -30, -10);
+                eyebrows1();
+                eyebrows2();
+                //
+                setXMouth(-15,-5, 5, 15);
+                setYMouth(45, 20, 20, 45);
+                mouth2();
+                playSound(3);
+            break;
+            
+        default:
+            break;
+    }
+        
+        
+    }
 
-//convert nose polyline to shape
 
-     ofBeginShape();
-         for( int i = 0; i < nose.getVertices().size(); i++) {
-             ofVertex(nose.getVertices().at(i).x, nose.getVertices().at(i).y);
-         }
-     ofEndShape();
-   
-   
-}
-void ofApp::drawAngryParts(int x, int y) {
-    
-    int leftEBX = x - eyebrowDistanceX/2;
-    int leftEBY = y ;
-    int rightEBX = x + eyebrowDistanceX/2;
-    int rightEBY = y ;
-    
-    //left eyebrow
-    ofPushMatrix();
-    ofTranslate(leftEBX, leftEBY);
-    ofRotateDeg(0.1 * (ofGetFrameNum() - currentTime));
-    ofDrawRectangle(-eyebrowDistanceX/2 - eyebrowWidth, - eyebrowDistanceY/2, eyebrowWidth, eyebrowHeight);
-    ofPopMatrix();
-
-    //right eyebrow
-    ofPushMatrix();
-    ofTranslate(rightEBX, rightEBY);
-    ofRotateDeg(-0.1 * (ofGetFrameNum() - currentTime) );
-    ofDrawRectangle(eyebrowDistanceX/2, -eyebrowDistanceY/2, eyebrowWidth, eyebrowHeight);
-     ofPopMatrix();
-    
-    //angry mouth
-    ofDrawBezier(x - 10, y + 20 + (0.03 * (ofGetFrameNum() - currentTime)),
-                 x - 10, y + 20 - (0.05 * (ofGetFrameNum() - currentTime)),
-                 x + 10, y + 20 - (0.05 * (ofGetFrameNum() - currentTime)),
-                 x + 10, y + 20 + (0.03 * (ofGetFrameNum() - currentTime))
-                 );
-}
-
-void ofApp::drawSadParts(int x, int y) {
-    
-    int leftEBX = x - eyebrowDistanceX/2;
-    int leftEBY = y ;
-    int rightEBX = x + eyebrowDistanceX/2;
-    int rightEBY = y ;
-    
-    //left eyebrow
-    ofPushMatrix();
-    ofTranslate(leftEBX, leftEBY);
-    ofRotateDeg(-0.1 * (ofGetFrameNum() - currentTime));
-    ofDrawRectangle(-eyebrowDistanceX/2 - eyebrowWidth, - eyebrowDistanceY, eyebrowWidth, eyebrowHeight);
-    ofPopMatrix();
-
-    //right eyebrow
-    ofPushMatrix();
-    ofTranslate(rightEBX, rightEBY);
-    ofRotateDeg(0.1 * (ofGetFrameNum() - currentTime) );
-    ofDrawRectangle(eyebrowDistanceX/2, -eyebrowDistanceY, eyebrowWidth, eyebrowHeight);
-     ofPopMatrix();
-
-    //angry mouth
-    ofDrawBezier(x - 10, y + 20 + 0.03 * (ofGetFrameNum() - currentTime),
-                 x - 10, y + 20 - 0.05 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 20 - 0.05 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 20 + 0.03 * (ofGetFrameNum() - currentTime)
-                 );
-}
-
-void ofApp::drawHappyParts(int x, int y) {
-    
-    int leftEBX = x - eyebrowDistanceX/2;
-    int leftEBY = y ;
-    int rightEBX = x + eyebrowDistanceX/2;
-    int rightEBY = y ;
-    
-    //left eyebrow
-   ofDrawRectangle(x - eyebrowDistanceX - eyebrowWidth,  y - eyebrowDistanceY
-                   - 0.05 * (ofGetFrameNum() - currentTime),
-                   eyebrowWidth, eyebrowHeight);
-   //right eyebrow
-   ofDrawRectangle(x + eyebrowDistanceX, y - eyebrowDistanceY
-                   - 0.05 * (ofGetFrameNum() - currentTime),
-                   eyebrowWidth, eyebrowHeight);
-    
-    ofDrawBezier(x - 10, y + 20 + 0.05 * (ofGetFrameNum() - currentTime),
-                 x - 10, y + 20 + 0.2 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 20 + 0.2 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 20 + 0.05 * (ofGetFrameNum() - currentTime)
-                 );
-}
-void ofApp::drawSurprisedParts(int x, int y) {
-
-    
-    int leftEBX = x - eyebrowDistanceX/2;
-    int leftEBY = y ;
-    int rightEBX = x + eyebrowDistanceX/2;
-    int rightEBY = y ;
-    
-    //left eyebrow
-   ofDrawRectangle(x - eyebrowDistanceX - eyebrowWidth,  y - eyebrowDistanceY
-                   - 0.02 * (ofGetFrameNum() - currentTime),
-                   eyebrowWidth, eyebrowHeight);
-   //right eyebrow
-   ofDrawRectangle(x + eyebrowDistanceX, y - eyebrowDistanceY
-                   - 0.02 * (ofGetFrameNum() - currentTime),
-                   eyebrowWidth, eyebrowHeight);
-    
-    ofDrawBezier(x - 10, y + 25 ,
-                 x - 10, y + 25 - 0.1 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 25 - 0.1 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 25
-                 );
-    ofDrawBezier(x - 10, y + 25 ,
-                 x - 10, y + 25 + 0.08 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 25 + 0.08 * (ofGetFrameNum() - currentTime),
-                 x + 10, y + 25
-                 );
+//--------------------------------------------------------------
+void ofApp::emotionchanged(){
+    if (x==3) {
+        x=0;
+    }
+    else  {
+        x++;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
-if(key == 'p'){
-        mySound.play();
-        ofLog(OF_LOG_NOTICE, "p pressed");
-    }
 
 }
 
@@ -257,7 +237,7 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y){
 
 }
 
@@ -297,6 +277,99 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+void ofApp::happiness(){
+    //eyes
+    eyes();
+    eyebrows1();
+    mouth();
+}
+void ofApp::sad(){
+    eyes();
+    eyebrows1();
+    eyebrows2();
+    mouth2();
+}
+void ofApp::surprise(){
+    eyes();
+    ofDrawCircle(f1.x, f1.y, 30);
+    ofDrawCircle(f1.x*-1, f1.y, 30);
+    mouth2();
+}
+void ofApp::anger(){
+    eyes();
+    eyebrows1();
+    eyebrows2();
+    mouth2();
+}
+
+void ofApp::mouth(){
+    ofDrawBezier(m1.x,m1.y,m2.x,m2.y,m2.x*-1,m2.y,m1.x*-1,m1.y);
+}
+
+void ofApp::mouth2(){
+    ofDrawBezier(m1.x,m1.y,m2.x,m2.y,m3.x,m3.y,m4.x,m4.y);
+}
+void ofApp::eyebrows1(){
+    
+    ofDrawBezier(eb1.x*-1,eb1.y,eb2.x*-1,eb2.y,eb3.x*-1,eb3.y,eb4.x*-1,eb4.y);
+}
+void ofApp::eyebrows2(){
+    
+    ofDrawBezier(eb1.x,eb1.y,eb2.x,eb2.y,eb3.x,eb3.y,eb4.x,eb4.y);
+}
+
+void ofApp::setXEyebrows(int m,int n,int p, int q){
+    eb1.x+=s*(m-eb1.x);
+    eb2.x+=s*(n-eb2.x);
+    eb3.x+=s*(p-eb3.x);
+    eb4.x+=s*(q-eb4.x);
+}
+
+void ofApp::setYEyebrows(int m,int n,int p, int q){
+    eb1.y+=s*(m-eb1.y);
+    eb2.y+=s*(n-eb2.y);
+    eb3.y+=s*(p-eb3.y);
+    eb4.y+=s*(q-eb4.y);
+    
+}
+void ofApp::setXMouth(int m,int n,int p, int q){
+    
+    m1.x+=s*(m-m1.x);
+    m2.x+=s*(n-m2.x);
+    m3.x+=s*(p-m3.x);
+    m4.x+=s*(q-m4.x);
+}
+void ofApp::setYMouth(int m,int n,int p, int q){
+    m1.y+=s*(m-m1.y);
+    m2.y+=s*(n-m2.y);
+    m3.y+=s*(p-m3.y);
+    m4.y+=s*(q-m4.y);
+}
+void ofApp::seteyes(int m, int n){
+    eye.x+=s*(m-eye.x);
+    eye.y+=s*(n-eye.y);
+}
+void ofApp::eyes(){
+    ofFill();
+    ofDrawEllipse(eye.x, eye.y, 8, 11);
+    ofDrawEllipse(eye.x*-1, eye.y, 8, 11);
+    ofNoFill();
+}
+void ofApp::scaleFace(int &face){
+    
+    fradius=face;
+}
+void ofApp::playSound(int sds){
+    if (sd==sds) {
+        sound.play();
+        if (sds==3) {
+            sd=0;
+        }else{
+            sd++;
+        }
+    }
+    
 }
