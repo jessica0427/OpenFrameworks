@@ -8,6 +8,12 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+    
+        void drawFace(int x, int y);
+        void drawHappyParts(int x, int y);
+        void drawSadParts(int x, int y);
+        void drawSurprisedParts(int x, int y);
+        void drawAngryParts(int x, int y);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
