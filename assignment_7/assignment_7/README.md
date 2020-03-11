@@ -1,5 +1,7 @@
 ## Week7 Assignment
 
+https://vimeo.com/394083471
+
 ## Screenshots
 
 <img width="983" alt="Screen Shot 2020-03-11 at 7 02 48 PM" src="https://user-images.githubusercontent.com/53446525/76472178-26483a00-63cb-11ea-9b04-36425598f333.png">
