@@ -10,8 +10,11 @@ class ofApp : public ofBaseApp{
         void update();
         void draw();
     
+        void initializePerson();
+        void initializeFace();
+    
         void drawText(ofVec2f position);
-
+    
         void drawFace(ofVec2f position);
         void drawEyebrows(ofVec2f position, int angle);
     
@@ -20,6 +23,7 @@ class ofApp : public ofBaseApp{
         void drawAngryParts(ofVec2f position, int intensity);
         void drawSurprisedParts(ofVec2f position, int intensity);
 
+    
         void keyPressed(int key);
         void keyReleased(int key);
         void mouseMoved(int x, int y );
@@ -42,20 +46,32 @@ class ofApp : public ofBaseApp{
     
         ofRectangle face;
         ofRectangle faceOutline;
-    
-    
-    //position vectors of face, offset relative to HEAD ANCHOR
-    ofVec2f headAnchor,
-                facePosition, //head anchor
-                leftEyebrowOffset, rightEyebrowOffset,
-                leftEyeOffset, rightEyeOffset,
-                topNoseOffset, leftNoseOffset, rightNoseOffset,
-                sadMouthOffset,happyMouthOffset, angryMouthOffset,surprisedMouthOffset;
+        
+        //position vectors of face, offset relative to HEAD ANCHOR
+        ofVec2f headAnchor,
+                    facePosition, //head anchor
+                    leftEyebrowOffset, rightEyebrowOffset,
+                    leftEyeOffset, rightEyeOffset,
+                    topNoseOffset, leftNoseOffset, rightNoseOffset,
+                    sadMouthOffset,happyMouthOffset, angryMouthOffset,surprisedMouthOffset,
+                    neckPosition,
+        //position vectors of body, offset relative to TORSO ANCHOR
+                torsoAnchor,
+                    topTorsoOffset, leftTorsoOffset, rightTorsoOffset,
+                    leftHandOffset, rightHandOffset,
+                    bodyPosition,
+        //position vectors of legs, offset relative to HIP ANCHOR
+                hipAnchor, hipOffset,
+                    leftFootOffset, rightFootOffset,
+                    leftFrontFootOffset, rightFrontFootOffset,
+                    
+                worldPosition;
 
-    //face variables
-        int strokeThickness = 13;
-        int faceWidth = 150;
-        int faceHeight = 120;
+    
+        //face variables
+        int strokeThickness = 15;
+        int faceWidth = 170;
+        int faceHeight = 110;
     
         int eyeDistanceX = 45;
         int eyeDistanceY = 2;
@@ -67,12 +83,13 @@ class ofApp : public ofBaseApp{
         int eyebrowHeight = 13;
         int eyebrowRotateAngle = 0;
 
-        int noseWidth = 20;
-        int noseHeight = 15;
+        int noseWidth = 28;
+        int noseHeight = 20;
 
-        int mouthWidth = 30;
+        int mouthWidth = 26;
 
-         //control variables
+    
+        //control variables
         ofPoint myMouse;
         ofVec2f currVec;
         ofVec2f targetVec;
@@ -80,7 +97,7 @@ class ofApp : public ofBaseApp{
         bool moveLeft = false;
         int emotionCounter = 0;
 
-          ofSoundPlayer bgm;
+        ofSoundPlayer bgm;
         float bgmVolume = 0.2f;
     
         ofxPanel gui;
@@ -92,5 +109,7 @@ class ofApp : public ofBaseApp{
         ofxIntSlider emotionalIntSlider;
     
         ofxLabel screenSize;
+        
 
+    
 };

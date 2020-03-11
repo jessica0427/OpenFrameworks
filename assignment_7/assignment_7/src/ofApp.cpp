@@ -4,39 +4,36 @@
 ofColor red(255,0,0);
 ofColor black(0,0,0);
 ofColor white(255,255,255);
+ofColor green(0, 255, 0);
 ofColor gray(128, 128, 128);
 ofColor cyan(0, 255, 255);
-ofColor pink(255, 192, 203);
 ofColor yellow(255, 255, 0);
-ofColor green(0, 255, 0);
+ofColor pink(255, 192, 203);
 
 ofVec2f textOffset(50, 50);
 
 //--------------------------------------------------------------
-
 void ofApp::setup(){
-    
     ofSetFrameRate(60);
     ofSetRectMode(OF_RECTMODE_CENTER);
-    ofSetCircleResolution(90);
+    ofSetCircleResolution(100);
     ofEnableSmoothing();
     
-    bgm.load("game_music.wav");
+    bgm.load("music.mp3");
     bgm.play();
     bgm.setLoop(true);
     bgm.setVolume(bgmVolume);
     
     volumeFloatSlider.addListener(this, &ofApp::volumeFloatSliderChanged);
     changeExpressionButton.addListener(this, &ofApp::changeExpressionButtonPressed);
-
-
-    // gui
     
-    gui.setup(); 
+    gui.setup(); // most of the time you don't need a name
     gui.add(volumeFloatSlider.setup("volume", 0.2f, 0.0f, 1.0f));
-    gui.add(backgroundColorSlider.setup("color", ofColor(176,224,230), ofColor(0, 0), ofColor(255, 255)));
+    gui.add(backgroundColorSlider.setup("color", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
     gui.add(changeExpressionButton.setup("change expression"));
     gui.add(emotionalIntSlider.setup("emotional", 5, 0, 10));
+    
+    initializePerson();
     
     currVec.set(ofGetWidth() - 100, 100);
     
@@ -48,20 +45,18 @@ void ofApp::update(){
     
     //update person
     headAnchor.set(ofGetWidth()/2, ofGetHeight()/2 + bobOffset * sin(vertMoveAngle));
-
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofBackground(backgroundColorSlider);
     
-       ofBackground(backgroundColorSlider);
-
-       drawText(textOffset);
-       drawFace(headAnchor);
+    drawText(textOffset);
+    drawFace(headAnchor);
     
     if (emotionCounter == 0) {
-      
+        //screen auto cleared
     }
     if (emotionCounter == 1) {
         drawHappyParts(headAnchor, emotionalIntSlider);
@@ -77,23 +72,20 @@ void ofApp::draw(){
     }
     if (emotionCounter == 5) {
         emotionCounter = 0;
-
     }
-
+    
+    
     gui.draw();
-
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
     if(key == 'a') {
         moveLeft = true;
     }
     if(key == 'd') {
         moveRight = true;
     }
-
 }
 
 //--------------------------------------------------------------
@@ -107,66 +99,65 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y){
-
+void ofApp::mouseMoved(int x, int y ){
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
     targetVec.set(x, y);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+void ofApp::dragEvent(ofDragInfo dragInfo){
+    
 }
 
 void ofApp::volumeFloatSliderChanged(float & volumeFloatSlider ) {
     bgm.setVolume(volumeFloatSlider);
-
 }
-
 void ofApp::changeExpressionButtonPressed() {
-
     emotionCounter++;
-
 }
-void ofApp::initializePerson() {
 
+void ofApp::initializePerson() {
     faceColor = white;
     faceOutlineColor = black;
     
+    initializeFace();
+    
+
+}
 void ofApp::initializeFace() {
     leftEyeOffset.set(-eyeDistanceX, eyeDistanceY);
     rightEyeOffset.set(eyeDistanceX, eyeDistanceY);
@@ -182,9 +173,7 @@ void ofApp::initializeFace() {
     angryMouthOffset.set(0, noseHeight + 10);
     happyMouthOffset.set(0, noseHeight + 2);
     surprisedMouthOffset.set(0, noseHeight + 10);
-
 }
-
 void ofApp::drawText(ofVec2f position) {
     ofSetColor(black);
 
@@ -210,7 +199,6 @@ void ofApp::drawFace(ofVec2f position) {
 }
 void ofApp::drawEyebrows(ofVec2f position, int angle) {
     ofSetRectMode(OF_RECTMODE_CENTER);
-    
     //eyebrows
     ofPushMatrix();
         ofTranslate(leftEyebrowOffset + position);
@@ -297,3 +285,8 @@ void ofApp::drawSurprisedParts(ofVec2f position, int intensity) {
     ofPopMatrix();
     
 }
+
+
+
+
+
